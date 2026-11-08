@@ -80,6 +80,7 @@ main{padding-top:34px}
 .play-controls button:active{background:#00b879;color:#06251a}
 @media(max-width:600px){.play-overlay{padding:6px}.play-head{padding:11px}.play-stage{padding:7px}.play-help{padding:9px;font-size:11px}}
 
+.game-hud{display:flex;gap:18px;flex-wrap:wrap;padding:0 2px 11px;color:#c7d3df;font-size:13px}.game-hud b{color:#fff}
 </style>
 </head>
 <body>
@@ -103,7 +104,7 @@ main{padding-top:34px}
  <button class="nav" data-page="wallet" onclick="showPage('wallet')"><span class="ico">◉</span><span>Billetera</span></button>
  <button class="nav" data-page="creator" onclick="showPage('creator')"><span class="ico">✧</span><span>Creator Hub</span></button>
  <button class="nav" data-page="settings" onclick="showPage('settings')"><span class="ico">⚙</span><span>Configuración</span></button>
- <div class="side-bottom">NEXORA · Beta 0.1<br>Un universo para jugar y crear.</div>
+ <div class="side-bottom">NEXORA · Beta 0.3<br>Un universo para jugar y crear.</div>
 </aside>
 <main>
 <section class="page active" id="page-home">
@@ -153,7 +154,7 @@ main{padding-top:34px}
 <div class="play-overlay" id="playOverlay">
  <div class="play-card">
   <div class="play-head"><div><div class="eyebrow">NEXORA 0.3 · EXPERIENCIA JUGABLE</div><h2 id="playTitle">Torre Imposible</h2></div><button class="btn secondary small" onclick="closeGame()">✕ Salir</button></div>
-  <div class="play-stage"><canvas id="nexoraGameCanvas" width="900" height="420" aria-label="Juego de plataformas NEXORA"></canvas></div>
+  <div class="play-stage"><div class="game-hud"><span>🪙 Monedas: <b id="gameCoins">0</b>/6</span><span>☠️ Caídas: <b id="gameDeaths">0</b></span><span>📍 Progreso: <b id="gameProgress">0%</b></span></div><canvas id="nexoraGameCanvas" width="900" height="420" aria-label="Juego de plataformas NEXORA"></canvas></div>
   <div class="play-help"><span>⌨️ Mover: A / D o ← / → · Saltar: ESPACIO / W / ↑</span><div class="play-controls"><button onpointerdown="gameHold('left',true)" onpointerup="gameHold('left',false)" onpointerleave="gameHold('left',false)">◀</button><button onclick="gameJump()">SALTAR</button><button onpointerdown="gameHold('right',true)" onpointerup="gameHold('right',false)" onpointerleave="gameHold('right',false)">▶</button><button onclick="restartGame()">↻ Reiniciar</button></div></div>
  </div>
 </div>
@@ -193,29 +194,37 @@ function gameCard(g){return '<article class="game" onclick="openGame('+JSON.stri
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function allGames(){return [...data.games.map(g=>({...g,bg:'linear-gradient(135deg,#164c46,#426b91)'})),...samples]}
 function renderGames(target,filter=''){let arr=allGames().filter(g=>(g.name+' '+g.desc+' '+g.genre).toLowerCase().includes((filter||'').toLowerCase()));let sort=document.getElementById('gameSort')?.value||'popular';if(sort==='az')arr.sort((a,b)=>a.name.localeCompare(b.name));if(sort==='new')arr.reverse();else if(sort==='popular')arr.sort((a,b)=>(b.plays||0)-(a.plays||0));document.getElementById(target).innerHTML=arr.length?arr.map(gameCard).join(''):'<div class="empty" style="grid-column:1/-1">No encontramos experiencias con esa búsqueda.</div>'}
-let ng={running:false,raf:0,keys:{},player:{x:35,y:320,vx:0,vy:0,w:28,h:36,on:false},camera:0,won:false};
+let ng={running:false,raf:0,keys:{},player:{x:35,y:320,vx:0,vy:0,w:28,h:36,on:false},camera:0,won:false,coins:0,deaths:0,checkpoint:35};
+const ngCollectibles=[{x:110,y:330},{x:335,y:285},{x:530,y:240},{x:780,y:285},{x:965,y:230},{x:1140,y:330}];
 const ngPlatforms=[{x:0,y:370,w:230,h:50},{x:290,y:325,w:130,h:18},{x:485,y:280,w:125,h:18},{x:680,y:325,w:125,h:18},{x:875,y:270,w:150,h:18},{x:1080,y:370,w:180,h:50}];
 const ngSpikes=[{x:160,y:350,w:38,h:20},{x:365,y:305,w:30,h:20},{x:545,y:260,w:28,h:20},{x:735,y:305,w:32,h:20},{x:930,y:250,w:30,h:20}];
 function openGame(name){if(name!=='Torre Imposible'){toast('Esta experiencia todavía no es jugable. ¡Torre Imposible ya tiene una demo!');return}document.getElementById('playTitle').textContent=name;document.getElementById('playOverlay').style.display='grid';restartGame()}
 function closeGame(){ng.running=false;cancelAnimationFrame(ng.raf);document.getElementById('playOverlay').style.display='none';ng.keys={}}
-function restartGame(){ng.player={x:35,y:320,vx:0,vy:0,w:28,h:36,on:false};ng.camera=0;ng.won=false;ng.running=true;cancelAnimationFrame(ng.raf);gameLoop()}
+function restartGame(){ng.player={x:35,y:320,vx:0,vy:0,w:28,h:36,on:false};ng.camera=0;ng.won=false;ng.coins=0;ng.deaths=0;ng.checkpoint=35;ng.running=true;ngCollectibles.forEach(c=>c.taken=false);updateGameHud();cancelAnimationFrame(ng.raf);gameLoop()}
+function updateGameHud(){document.getElementById('gameCoins').textContent=ng.coins;document.getElementById('gameDeaths').textContent=ng.deaths;document.getElementById('gameProgress').textContent=Math.min(100,Math.round(ng.player.x/1150*100))+'%'}
 function gameHold(key,on){ng.keys[key]=on}
 function gameJump(){if(ng.player.on&&!ng.won){ng.player.vy=-11.8;ng.player.on=false}}
+function respawn(){ng.deaths++;ng.player.x=ng.checkpoint;ng.player.y=ng.checkpoint>35?260:320;ng.player.vx=0;ng.player.vy=0;ng.camera=Math.max(0,ng.player.x-300);updateGameHud()}
 function gameLoop(){if(!ng.running)return;const canvas=document.getElementById('nexoraGameCanvas'),ctx=canvas.getContext('2d'),p=ng.player;
  const left=ng.keys.left,right=ng.keys.right;p.vx=(right?4.1:0)-(left?4.1:0);p.x=Math.max(0,p.x+p.vx);p.vy=Math.min(13,p.vy+.55);const oldY=p.y;p.y+=p.vy;p.on=false;
  for(const q of ngPlatforms){if(p.x+p.w>q.x&&p.x<q.x+q.w&&oldY+p.h<=q.y+5&&p.y+p.h>=q.y&&p.vy>=0){p.y=q.y-p.h;p.vy=0;p.on=true}}
- for(const s of ngSpikes){if(p.x+p.w>s.x+5&&p.x<s.x+s.w-5&&p.y+p.h>s.y+5&&p.y<s.y+s.h){p.x=35;p.y=320;p.vx=0;p.vy=0;ng.camera=0}}
- if(p.y>470){p.x=35;p.y=320;p.vy=0;ng.camera=0}
- if(p.x>1100&&!ng.won){ng.won=true;toast('¡Nivel completado! Llegaste al final de Torre Imposible.')}
+ for(const s of ngSpikes){if(p.x+p.w>s.x+5&&p.x<s.x+s.w-5&&p.y+p.h>s.y+5&&p.y<s.y+s.h){respawn();break}}
+ if(p.y>470)respawn();
+ for(const coin of ngCollectibles){if(!coin.taken&&p.x+p.w>coin.x-10&&p.x<coin.x+10&&p.y+p.h>coin.y-10&&p.y<coin.y+10){coin.taken=true;ng.coins++;updateGameHud();}}
+ if(p.x>650&&ng.checkpoint===35){ng.checkpoint=680;toast('¡Punto de control alcanzado!')}
+ if(p.x>1100&&!ng.won){ng.won=true;toast('¡Nivel completado! Conseguí '+ng.coins+' de 6 monedas.')}
  ng.camera=Math.max(0,Math.min(360,p.x-300));
  ctx.clearRect(0,0,900,420);const grad=ctx.createLinearGradient(0,0,0,420);grad.addColorStop(0,'#18364b');grad.addColorStop(1,'#101923');ctx.fillStyle=grad;ctx.fillRect(0,0,900,420);
  ctx.fillStyle='#ffffff12';for(let i=0;i<18;i++){ctx.beginPath();ctx.arc((i*83-ng.camera*.22)%980,45+(i*37)%180,2,0,Math.PI*2);ctx.fill()}
  ctx.save();ctx.translate(-ng.camera,0);
  for(const q of ngPlatforms){ctx.fillStyle='#00b879';ctx.fillRect(q.x,q.y,q.w,q.h);ctx.fillStyle='#65f0bd';ctx.fillRect(q.x,q.y,q.w,5)}
  for(const s of ngSpikes){ctx.fillStyle='#ff6b6b';ctx.beginPath();ctx.moveTo(s.x,s.y+s.h);ctx.lineTo(s.x+s.w/2,s.y);ctx.lineTo(s.x+s.w,s.y+s.h);ctx.fill()}
+ for(const coin of ngCollectibles){if(!coin.taken){ctx.fillStyle='#ffd166';ctx.beginPath();ctx.arc(coin.x,coin.y,9,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff2b0';ctx.fillRect(coin.x-2,coin.y-6,3,12)}}
  ctx.fillStyle='#ffd166';ctx.fillRect(1150,315,12,55);ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('META',1124,305);
  ctx.fillStyle='#4c8dff';ctx.fillRect(p.x,p.y,p.w,p.h);ctx.fillStyle='#fff';ctx.fillRect(p.x+6,p.y+8,5,5);ctx.fillRect(p.x+18,p.y+8,5,5);ctx.restore();
  ctx.fillStyle='#fff';ctx.font='bold 15px system-ui';ctx.fillText(ng.won?'¡NIVEL COMPLETADO!':'LLEGÁ A LA BANDERA →',22,30);
+ if(ng.won){ctx.font='bold 18px system-ui';ctx.fillStyle='#ffd166';ctx.fillText('Monedas recogidas: '+ng.coins+'/6',22,58)}
+ updateGameHud();
  if(!ng.won)ng.raf=requestAnimationFrame(gameLoop);
 }
 window.addEventListener('keydown',e=>{if(document.getElementById('playOverlay').style.display!=='grid')return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup',' '].includes(k))e.preventDefault();if(k==='arrowleft'||k==='a')ng.keys.left=true;if(k==='arrowright'||k==='d')ng.keys.right=true;if(k===' '||k==='arrowup'||k==='w')gameJump()});
