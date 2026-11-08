@@ -134,12 +134,65 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
 /* Portadas fotográficas para las experiencias */
 .thumb.has-photo{display:block;background:#171d26}.thumb.has-photo .game-cover{display:block;width:100%;height:100%;object-fit:cover;transition:transform .35s ease;filter:saturate(1.08)}.game:hover .thumb.has-photo .game-cover{transform:scale(1.06)}.thumb.has-photo:after{background:linear-gradient(0deg,#071018b8,transparent 62%)}.thumb.has-photo .tag{background:#101820dd;color:#b8f6df;border:1px solid #ffffff24}
 .home-hero{background-image:url('https://images.unsplash.com/photo-1767800766429-7179fd80948f?auto=format&fit=crop&w=2000&q=85')}
+
+/* NEXORA classic social gaming layout */
+:root{--bg:#f1f2f3;--surface:#fff;--surface2:#f6f7f8;--surface3:#e6e8ea;--line:#d7dadd;--text:#24272b;--muted:#6c737b;--green:#00a86b;--green2:#00b879;--blue:#168bd2;--radius:8px}
+body{background:#f1f2f3;color:#24272b;font-family:Arial,Helvetica,sans-serif}
+.top{height:78px;background:#e0e3e5;border-bottom:1px solid #c8cccf;color:#25282b;padding:0 14px;gap:26px;backdrop-filter:none}
+.brand{font-weight:1000;font-size:27px;letter-spacing:-1.5px;color:#34383c}
+.brand span{color:inherit}
+.top-links{display:flex;align-items:center;gap:34px;white-space:nowrap}
+.top-links button{background:none;color:#292d31;font-size:16px;padding:10px 4px}
+.top-links button:hover{color:#0879b7}
+.search{height:34px;max-width:450px;background:#fff;border:1px solid #c5c9cc;border-radius:7px;color:#72777c}
+.search input{color:#25282b}
+.topright .pill{background:#e0e3e5;color:#333;padding:7px 10px}
+.avatar-mini{border-radius:50%;width:30px;height:30px}
+.layout{padding-top:78px}
+.side{top:78px;width:168px;background:#e0e3e5;border-right:1px solid #c8cccf;padding:12px 9px;color:#3b4044}
+.side-label{display:none}
+.nav{width:100%;display:flex;align-items:center;gap:8px;padding:8px 5px;margin:1px 0;border-radius:5px;color:#41464b;font-size:15px;text-align:left;background:transparent}
+.nav:hover,.nav.active{background:#d2d6d9;color:#202428}
+.nav .ico{width:23px;font-size:19px;color:#727a80}
+.side-bottom{font-size:10px;color:#6d7479;margin:22px 8px}
+main{margin-left:168px;width:calc(100% - 168px);padding:22px 20px 50px;max-width:none}
+.page{max-width:none}
+.classic-home{display:grid;grid-template-columns:minmax(120px,154px) minmax(580px,930px) minmax(120px,154px);gap:22px;justify-content:center;align-items:start;max-width:1320px;margin:0 auto}
+.home-feed{min-width:0;width:100%}
+.ad-placeholder{height:570px;background:linear-gradient(160deg,#c8d9dc,#168fa8 52%,#34434c);display:flex;flex-direction:column;justify-content:space-between;padding:14px 10px;color:white;text-align:center;box-shadow:inset 0 0 35px #0002}
+.ad-placeholder span{font-size:12px;font-weight:900;letter-spacing:2px}
+.ad-placeholder b{font-size:22px;line-height:1.2;text-shadow:0 2px 5px #0007}
+.ad-placeholder small{font-size:9px;color:#fff}
+.classic-profile{display:flex;align-items:center;gap:22px;min-height:150px;margin:0 0 14px}
+.classic-avatar{width:144px;height:144px;border-radius:50%;background:linear-gradient(140deg,#bfc6c9,#8d999f);display:grid;place-items:center;font-size:66px;border:5px solid #e5e6e7;overflow:hidden}
+.classic-profile h1{font-size:32px;margin:0 0 6px;font-weight:750;color:#292d31}
+.classic-handle{font-size:13px;color:#6b7379}
+.classic-link,.classic-section-head button,.classic-friends-head button{background:none;color:#3c454b;font-size:13px;padding:5px 0}
+.classic-friends-head,.classic-section-head{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px}
+.classic-friends-head h2,.classic-section-head h2{font-size:20px;margin:0;font-weight:700}
+.classic-friends{min-height:118px;display:flex;gap:18px;align-items:flex-start;padding:4px 8px 10px}
+.friend-empty{color:#81888d;font-size:13px;padding:22px 0}
+.home-friend{width:82px;text-align:center;font-size:12px;cursor:pointer}
+.home-friend-avatar{width:78px;height:78px;border-radius:50%;background:#c4c8ca;display:grid;place-items:center;font-size:32px;margin:0 auto 5px}
+.classic-games{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.classic-games .game-card{min-width:0;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+.classic-games .game-card .game-cover,.classic-games .game-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;display:block}
+.classic-games .game-card h3,.classic-games .game-card .game-title{font-size:15px;color:#25292d;margin:6px 0 3px}
+.classic-games .game-card p,.classic-games .game-card .game-meta{font-size:12px;color:#72787d}
+.classic-games .game-card button{max-width:100%}
+.popular-head{margin-top:28px}
+.popular-games{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.classic-account-strip{margin-top:24px;border-top:1px solid #d5d8da;padding:14px 0;display:flex;gap:24px;align-items:center;color:#50575c;font-size:13px}
+.classic-account-strip button{margin-left:auto;background:#343a3f;color:white;border-radius:7px;padding:9px 14px}
+@media(max-width:1150px){.classic-home{grid-template-columns:0 minmax(0,1fr) 0;gap:0}.ad-rail{display:none}.popular-games{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){.top{gap:10px;padding:0 9px}.top-links{display:none}.side{width:58px;padding:8px 5px}.nav{justify-content:center;font-size:0}.nav .ico{font-size:20px}.side-bottom{display:none}main{margin-left:58px;width:calc(100% - 58px);padding:14px 10px}.classic-profile{min-height:100px}.classic-avatar{width:88px;height:88px;font-size:42px}.classic-profile h1{font-size:23px}.classic-games{grid-template-columns:repeat(2,minmax(0,1fr))}.popular-games{grid-template-columns:repeat(3,minmax(0,1fr))}.classic-account-strip{flex-wrap:wrap}}
 </style>
 </head>
 <body>
 <header class="top">
- <a class="brand" href="#" onclick="showPage('home');return false">NEX<span>ORA</span></a>
- <label class="search">⌕ <input id="globalSearch" placeholder="Buscar experiencias, personas y catálogo..." onkeydown="if(event.key==='Enter')searchAll()"></label>
+ <a class="brand" href="#" onclick="showPage('home');return false">NEXORA</a>
+ <nav class="top-links"><button onclick="showPage('discover')">Discover</button><button onclick="showPage('avatar')">Avatar Shop</button><button onclick="showPage('studio')">Create</button><button onclick="showPage('inventory')">Inventory</button></nav>
+ <label class="search">⌕ <input id="globalSearch" placeholder="Search experiences..." onkeydown="if(event.key==='Enter')searchAll()"></label>
  <div class="topright"><div class="pill">◆ <span id="topCoins">1.000</span> NX</div><div class="avatar-mini" id="topAvatar">😀</div></div>
 </header>
 <div class="layout">
@@ -164,11 +217,20 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
 </aside>
 <main>
 <section class="page active" id="page-home">
- <div class="home-topline"><div><div class="eyebrow">NEXORA · TU PLATAFORMA</div><h1>¡Qué bueno verte, <span id="helloName">Jugador</span>!</h1><p class="sub">Hay mundos nuevos esperando. ¿A dónde vamos hoy?</p></div><button class="btn" onclick="showPage('discover')">Explorar todo <span>↗</span></button></div>
- <div class="home-hero"><div class="home-hero-shade"></div><div class="home-hero-copy"><div class="home-live"><i></i> DESCUBRÍ TU PRÓXIMA AVENTURA</div><h2>Entrá. Explorá.<br><span>Hacé historia.</span></h2><p>Encontrá experiencias creadas para jugar, competir y descubrir algo distinto.</p><button class="btn home-hero-btn" onclick="showPage('discover')">Explorar experiencias <b>→</b></button></div><div class="home-hero-mark">N</div></div>
- <div class="home-shortcuts"><button onclick="showPage('discover')"><span>⌕</span><b>Descubrir</b><small>Encontrá tu próximo juego</small></button><button onclick="showPage('avatar')"><span>◉</span><b>Avatar</b><small>Personalizá tu personaje</small></button><button onclick="showPage('studio')"><span>▧</span><b>Crear</b><small>Construí tu mundo</small></button><button onclick="showPage('friends')"><span>♧</span><b>Amigos</b><small>Conectá con jugadores</small></button></div>
- <div class="home-section-title"><div><div class="eyebrow">PARA VOS</div><h2>Experiencias destacadas</h2></div><button class="home-text-link" onclick="showPage('discover')">Ver todas <b>→</b></button></div><div class="grid home-game-grid" id="homeGames"></div>
- <div class="home-lower"><div class="home-balance"><div><div class="eyebrow">TU CUENTA</div><h3>Tu espacio en NEXORA</h3><p>Tu progreso y tu comunidad, siempre a mano.</p></div><div class="home-account-stats"><div><small>Saldo</small><b>◆ <span id="homeCoins">1.000</span> NX</b></div><div><small>Amigos</small><b>♧ <span id="homeFriends">0</span></b></div><div><small>Creaciones</small><b>✧ <span id="homeCreations">0</span></b></div></div></div><div class="home-create-card"><div class="home-create-icon">✦</div><div class="eyebrow">NEXORA STUDIO</div><h3>Tu imaginación es el límite.</h3><p>Empezá a construir una experiencia propia.</p><button class="btn secondary small" onclick="showPage('studio')">Abrir Studio →</button></div></div>
+ <div class="classic-home">
+  <div class="ad-rail"><div class="ad-placeholder"><span>NEXORA</span><b>DESCUBRÍ<br>JUEGOS<br>NUEVOS</b><small>ESPACIO PROMOCIONAL</small></div></div>
+  <div class="home-feed">
+   <div class="classic-profile"><div class="classic-avatar" id="homeProfileAvatar">😀</div><div><h1 id="helloName">Jugador</h1><div class="classic-handle" id="homeHandle">@jugador · NEXORA</div><button class="classic-link" onclick="showPage('profile')">Ver perfil →</button></div></div>
+   <div class="classic-friends-head"><h2>Amigos (<span id="homeFriends">0</span>)</h2><button onclick="showPage('friends')">Ver todos →</button></div>
+   <div class="classic-friends" id="homeFriendsList"><div class="friend-empty">Todavía no agregaste amigos.</div></div>
+   <div class="classic-section-head"><h2>Recientes</h2><button onclick="showPage('discover')">Ver todos →</button></div>
+   <div class="classic-games recent-games" id="homeGames"></div>
+   <div class="classic-section-head popular-head"><h2>Populares</h2><button onclick="showPage('discover')">Explorar →</button></div>
+   <div class="classic-games popular-games" id="homePopular"></div>
+   <div class="classic-account-strip"><span>◆ <b id="homeCoins">1.000</b> NX</span><span>✦ <b id="homeCreations">0</b> creaciones</span><button onclick="showPage('studio')">Crear experiencia +</button></div>
+  </div>
+  <div class="ad-rail right-ad"><div class="ad-placeholder ad-tall"><span>NEXORA</span><b>CREÁ<br>TU PROPIO<br>MUNDO</b><small>ESPACIO PROMOCIONAL</small></div></div>
+ </div>
 </section>
 <section class="page" id="page-discover"><div class="welcome"><div><div class="eyebrow">DESCUBRÍ ALGO NUEVO</div><h1>Explorar experiencias</h1><p class="sub">Una selección de mundos para conocer.</p></div></div><div class="formrow"><input class="field" id="gameFilter" placeholder="Filtrar experiencias..." oninput="renderGames('discoverGames',this.value)"><select class="field" id="gameSort" onchange="renderGames('discoverGames',document.getElementById('gameFilter').value)"><option value="popular">Más populares</option><option value="new">Nuevas primero</option><option value="az">Nombre A-Z</option></select></div><div class="grid" id="discoverGames"></div></section>
 <section class="page" id="page-catalog"><div class="welcome"><div><div class="eyebrow">MERCADO NEXORA</div><h1>Catálogo</h1><p class="sub">Objetos y estilos para personalizar tu espacio.</p></div></div><div class="grid" id="catalogGrid"></div></section>
@@ -267,7 +329,8 @@ window.nexoraApplyCloudData=cloudData=>{
 
 function fmt(n){return Number(n||0).toLocaleString('es-AR')}
 function toast(msg){let el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display='none',2400)}
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===id));if(id==='discover')renderGames('discoverGames');if(id==='catalog')renderCatalog();if(id==='inventory')renderInventory();if(id==='missions')renderMissions();if(id==='friends')renderFriends();if(id==='wallet')renderTransactions();if(id==='creator')renderMyGames();window.scrollTo(0,0)}
+function renderHomeFriends(){const el=document.getElementById('homeFriendsList');if(!el)return;el.innerHTML=data.friends.length?data.friends.slice(0,8).map(n=>'<div class="home-friend" onclick="showPage(\'friends\')"><div class="home-friend-avatar">👤</div>'+escapeHTML(n)+'</div>').join(''):'<div class="friend-empty">Todavía no agregaste amigos. <button class="classic-link" onclick="showPage(\'friends\')">Buscar amigos →</button></div>'}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===id));if(id==='home'){renderGames('homeGames');renderGames('homePopular');renderHomeFriends()}if(id==='discover')renderGames('discoverGames');if(id==='catalog')renderCatalog();if(id==='inventory')renderInventory();if(id==='missions')renderMissions();if(id==='friends')renderFriends();if(id==='wallet')renderTransactions();if(id==='creator')renderMyGames();window.scrollTo(0,0)}
 function gameCard(g){const name=String(g.name||'');const safeName=escapeHTML(name);const playable=name==='Torre Imposible';const safeAttr=escapeHTML(name);const art={'Neon Rush':'photo-1542751371-adc38448a05e','Isla Perdida':'photo-1519608487953-e999c86e7455','Torre Imposible':'photo-1518709268805-4e9042af9f23','Pet Galaxy':'photo-1535223289827-42f1e9919769','City Life':'photo-1519501025264-65ba15a82390','Dungeon Quest':'photo-1518709268805-4e9042af9f23','Color Clash':'photo-1542751371-adc38448a05e','Sky Builders':'photo-1470770841072-f978cf4d019e'};const photo=art[name];const src=photo?'https://images.unsplash.com/'+photo+'?auto=format&fit=crop&w=1000&q=85':'';return '<article class="game" role="button" tabindex="0" data-game-name="'+safeAttr+'"><div class="thumb '+(photo?'has-photo':'')+'">'+(photo?'<img class="game-cover" src="'+src+'" alt="'+safeName+'" loading="lazy">':'<span class="thumb-emoji">'+g.emoji+'</span>')+'<span class="tag">'+(g.genre||'Experiencia')+'</span></div><div class="game-info"><div class="game-title">'+safeName+'</div><div class="game-meta"><span>◉ '+fmt(g.plays||0)+' visitas</span><span>◆ NEXORA</span></div><button class="btn small game-play-btn" type="button">'+(playable?'▶ JUGAR AHORA':'Ver experiencia')+'</button></div></article>'}
 document.addEventListener('click',function(e){const card=e.target.closest('[data-game-name]');if(card)openGame(card.getAttribute('data-game-name'));});
 document.addEventListener('keydown',function(e){const card=e.target.closest&&e.target.closest('[data-game-name]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openGame(card.getAttribute('data-game-name'));}});
@@ -318,7 +381,7 @@ function claimDailyReward(){const today=new Date().toLocaleDateString('en-CA');i
 function setFace(v){data.face=v;document.getElementById('avatarFigure').textContent=v;document.getElementById('profileAvatar').textContent=v;document.getElementById('topAvatar').textContent=v}
 function setAvatarColor(v){data.color=v;document.getElementById('profileAvatar').style.background='linear-gradient(140deg,'+v+',#126fbc)';document.getElementById('topAvatar').style.background='linear-gradient(140deg,'+v+',#126fbc)'}
 function saveAvatar(){persist();toast('Apariencia guardada en este dispositivo.')}
-function updateUI(){document.getElementById('helloName').textContent=data.name;document.getElementById('profileName').textContent=data.name;document.getElementById('profileHandle').textContent='@'+data.name.toLowerCase().replace(/\s/g,'_')+' · Miembro de NEXORA';document.getElementById('topCoins').textContent=fmt(data.coins);document.getElementById('walletCoins').textContent=fmt(data.coins);document.getElementById('profileCoins').textContent=fmt(data.coins);document.getElementById('homeCoins').textContent=fmt(data.coins);document.getElementById('homeFriends').textContent=data.friends.length;document.getElementById('homeCreations').textContent=data.games.length;document.getElementById('topAvatar').textContent=data.face;document.getElementById('profileAvatar').textContent=data.face;document.getElementById('avatarFigure').textContent=data.face;document.getElementById('profileAvatar').style.background='linear-gradient(140deg,'+data.color+',#126fbc)';document.getElementById('topAvatar').style.background='linear-gradient(140deg,'+data.color+',#126fbc)';document.getElementById('bioText').textContent=data.bio;document.getElementById('friendCount').textContent=data.friends.length;document.getElementById('createdCount').textContent=data.games.length;let ni=document.getElementById('profileNameInput');let bi=document.getElementById('profileBioInput');if(ni&&document.activeElement!==ni)ni.value=data.name;if(bi&&document.activeElement!==bi)bi.value=data.bio}
+function updateUI(){document.getElementById('helloName').textContent=data.name;document.getElementById('homeHandle').textContent='@'+data.name.toLowerCase().replace(/\\s/g,'_')+' · Miembro de NEXORA';document.getElementById('homeProfileAvatar').textContent=data.face;document.getElementById('homeProfileAvatar').style.background='linear-gradient(140deg,'+data.color+',#c7cdd0)';document.getElementById('profileName').textContent=data.name;document.getElementById('profileHandle').textContent='@'+data.name.toLowerCase().replace(/\s/g,'_')+' · Miembro de NEXORA';document.getElementById('topCoins').textContent=fmt(data.coins);document.getElementById('walletCoins').textContent=fmt(data.coins);document.getElementById('profileCoins').textContent=fmt(data.coins);document.getElementById('homeCoins').textContent=fmt(data.coins);document.getElementById('homeFriends').textContent=data.friends.length;document.getElementById('homeCreations').textContent=data.games.length;document.getElementById('topAvatar').textContent=data.face;document.getElementById('profileAvatar').textContent=data.face;document.getElementById('avatarFigure').textContent=data.face;document.getElementById('profileAvatar').style.background='linear-gradient(140deg,'+data.color+',#126fbc)';document.getElementById('topAvatar').style.background='linear-gradient(140deg,'+data.color+',#126fbc)';document.getElementById('bioText').textContent=data.bio;document.getElementById('friendCount').textContent=data.friends.length;document.getElementById('createdCount').textContent=data.games.length;let ni=document.getElementById('profileNameInput');let bi=document.getElementById('profileBioInput');if(ni&&document.activeElement!==ni)ni.value=data.name;if(bi&&document.activeElement!==bi)bi.value=data.bio}
 function saveName(){let n=document.getElementById('nameInput').value.trim();if(n.length<3){toast('Usá al menos 3 caracteres.');return}data.name=n;persist();toast('Nombre actualizado.')}
 function editBio(){let b=prompt('Escribí una descripción para tu perfil:',data.bio);if(b!==null){data.bio=b.slice(0,180);persist();toast('Descripción guardada.')}}
 function saveProfileChanges(){let name=document.getElementById('profileNameInput').value.trim();let bio=document.getElementById('profileBioInput').value.trim();if(name.length<3){toast('El nombre debe tener al menos 3 caracteres.');return}data.name=name.slice(0,24);data.bio=bio.slice(0,180);persist();toast('¡Tu perfil fue actualizado!')}
