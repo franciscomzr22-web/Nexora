@@ -111,5 +111,34 @@ function searchAll(){let q=document.getElementById('globalSearch').value.trim();
 function resetLocal(){if(!confirm('¿Restablecer los datos locales de NEXORA en este navegador?'))return;localStorage.removeItem(KEY);data={...defaultData,friends:[],games:[],transactions:[...defaultData.transactions]};persist();renderFriends();renderTransactions();renderMyGames();toast('Datos de demostración restablecidos.')}
 document.getElementById('homeGames').innerHTML=samples.slice(0,4).map(gameCard).join('');renderGames('discoverGames');updateUI();
 </script>
+
+<!-- Firebase: conexión inicial de NEXORA -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCvFq5AypXgf0jdG8HiyZ4TdR1ii0FDUtA",
+    authDomain: "nexoraweb-3dc9b.firebaseapp.com",
+    projectId: "nexoraweb-3dc9b",
+    storageBucket: "nexoraweb-3dc9b.firebasestorage.app",
+    messagingSenderId: "605063824702",
+    appId: "1:605063824702:web:3f010ac0ac2d68912d186f",
+    measurementId: "G-G8C7JB0WRC"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    window.NEXORA_FIREBASE = { app, auth, db };
+    window.dispatchEvent(new CustomEvent("nexora-firebase-ready"));
+    console.info("NEXORA: Firebase conectado correctamente.");
+  } catch (error) {
+    console.error("NEXORA: no se pudo inicializar Firebase.", error);
+    window.dispatchEvent(new CustomEvent("nexora-firebase-error", { detail: error }));
+  }
+</script>
 </body>
 </html>
