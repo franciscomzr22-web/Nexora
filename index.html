@@ -81,6 +81,28 @@ main{padding-top:34px}
 @media(max-width:600px){.play-overlay{padding:6px}.play-head{padding:11px}.play-stage{padding:7px}.play-help{padding:9px;font-size:11px}}
 
 .game-hud{display:flex;gap:18px;flex-wrap:wrap;padding:0 2px 11px;color:#c7d3df;font-size:13px}.game-hud b{color:#fff}
+
+/* NEXORA 1.0 — Roblox-inspired visual refresh */
+:root{--bg:#111318;--surface:#202329;--surface2:#292e36;--line:#373d47;--green:#00b879;--green2:#20d995;--radius:13px}
+body{background:#111318;color:#f7f8fa}
+.top{height:68px;background:#191b20;border-bottom:1px solid #30343c;padding:0 28px;gap:26px}
+.brand{font-size:26px;letter-spacing:-1.6px}.brand span{color:#00b879}
+.search{background:#25282e;border:1px solid #3a3e47;border-radius:8px;height:40px}
+.layout{padding-top:68px}.side{top:68px;background:#191b20;border-right:1px solid #30343c;width:238px;padding:19px 14px}
+.side-label{color:#9299a4;font-size:10px;letter-spacing:1.35px;padding:15px 12px 8px}
+.nav{border-radius:8px;padding:11px 13px;color:#d5d8dd;font-size:14px}.nav:hover{background:#292d34;transform:none}.nav.active{background:#30353d;box-shadow:inset 3px 0 #00b879;color:#fff}
+main{margin-left:238px;width:calc(100% - 238px);padding:30px 38px 65px;max-width:1700px}
+.welcome h1{font-size:36px;letter-spacing:-1.2px}.eyebrow{color:#00c887}
+.hero{min-height:285px;border-radius:14px;border:0;background:linear-gradient(105deg,#253b33 0%,#263d36 48%,#203b43 100%);box-shadow:0 8px 24px #0003;padding:36px}
+.hero:after{content:'';position:absolute;width:370px;height:370px;border-radius:50%;right:4%;top:-150px;background:radial-gradient(circle,#5ee5b633,transparent 68%)}
+.hero h2{font-size:44px;line-height:1.04}.hero-art{font-size:145px;right:10%;transform:rotate(-8deg);z-index:1}
+.grid{gap:18px}.game{border-radius:12px;background:#202329;border:1px solid #343941;box-shadow:0 3px 12px #0002;transition:transform .16s,border-color .16s,box-shadow .16s}.game:hover{transform:translateY(-4px);border-color:#00b879;box-shadow:0 12px 25px #0005}.game:focus-visible{outline:2px solid #00d995;outline-offset:3px}
+.thumb{height:165px}.thumb:after{background:linear-gradient(0deg,#0007,transparent 65%)}.game-info{padding:14px}.game-title{font-size:15px}.game-meta{font-size:11px}.game-play-btn{border-radius:8px;background:#00b879;color:#06251a;box-shadow:none}.game-play-btn:hover{background:#20d995}
+.panel,.metric-card,.feature-tile{border-radius:12px;background:#202329;border-color:#343941}.btn{border-radius:8px;background:#00b879;color:#06251a;box-shadow:none}.btn:hover{background:#20d995}.btn.secondary{background:#30353d;color:#f5f6f7;border:1px solid #454b55}
+.pill{background:#292d34;border:1px solid #3b414a}.avatar-mini{border-radius:9px}
+@media(max-width:1100px){.side{width:205px}main{margin-left:205px;width:calc(100% - 205px);padding:25px}}
+@media(max-width:760px){.top{height:60px;padding:0 12px;gap:10px}.layout{padding-top:60px}.side{top:60px;width:62px}.side-label,.nav span:not(.ico),.side-bottom{display:none}main{margin-left:62px;width:calc(100% - 62px);padding:18px 12px}.hero{padding:22px;min-height:225px}.hero h2{font-size:30px}.hero-art{font-size:85px;right:-8px;opacity:.6}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.thumb{height:115px}}
+
 </style>
 </head>
 <body>
@@ -104,12 +126,12 @@ main{padding-top:34px}
  <button class="nav" data-page="wallet" onclick="showPage('wallet')"><span class="ico">◉</span><span>Billetera</span></button>
  <button class="nav" data-page="creator" onclick="showPage('creator')"><span class="ico">✧</span><span>Creator Hub</span></button>
  <button class="nav" data-page="settings" onclick="showPage('settings')"><span class="ico">⚙</span><span>Configuración</span></button>
- <div class="side-bottom">NEXORA · Beta 0.3<br>Un universo para jugar y crear.</div>
+ <div class="side-bottom">NEXORA · Versión 1.0<br>Un universo para jugar y crear.</div>
 </aside>
 <main>
 <section class="page active" id="page-home">
  <div class="welcome"><div><div class="eyebrow">TU PRÓXIMO UNIVERSO EMPIEZA AQUÍ</div><h1>¡Hola, <span id="helloName">Jugador</span>!</h1><p class="sub">Descubrí experiencias, conocé creadores y encontrá tu próximo favorito.</p></div><button class="btn" onclick="showPage('discover')">Explorar experiencias ↗</button></div>
- <div class="hero"><div class="hero-copy"><div class="eyebrow">BIENVENIDO A NEXORA</div><h2>Tu mundo.<br>Tus reglas.</h2><p>Descubrí experiencias, personalizá tu identidad y empezá a construir tu lugar en una comunidad hecha para crear.</p><button class="btn" onclick="showPage('discover')">Descubrir experiencias ↗</button></div><div class="hero-art">🌐</div></div>
+ <div class="hero"><div class="hero-copy"><div class="eyebrow">NEXORA 1.0 · JUGÁ A TU MANERA</div><h2>Descubrí tu<br>próximo mundo.</h2><p>Descubrí experiencias, personalizá tu identidad y empezá a construir tu lugar en una comunidad hecha para crear.</p><button class="btn" onclick="showPage('discover')">Descubrir experiencias ↗</button></div><div class="hero-art">🌐</div></div>
  <div class="home-metrics"><div class="metric-card"><div class="metric-label">Tu saldo</div><div class="metric-value">◆ <span id="homeCoins">1.000</span> NX</div></div><div class="metric-card"><div class="metric-label">Tus amigos</div><div class="metric-value">♧ <span id="homeFriends">0</span></div></div><div class="metric-card"><div class="metric-label">Tus creaciones</div><div class="metric-value">✧ <span id="homeCreations">0</span></div></div></div>
  <div class="section-head"><h2>Experiencias populares</h2><span>Selección de NEXORA</span></div><div class="grid" id="homeGames"></div>
  <div class="home-feature-grid"><div class="feature-tile"><div class="feature-icon">🧩</div><div class="eyebrow">CREATOR HUB</div><h3>Tu próxima gran idea empieza acá</h3><p class="muted">Diseñá la ficha de tu experiencia y organizá tus proyectos.</p><button class="btn secondary small" onclick="showPage('creator')">Abrir Creator Hub</button></div><div class="feature-tile"><div class="feature-icon">🧑‍🚀</div><div class="eyebrow">IDENTIDAD</div><h3>Hacé que tu perfil sea tuyo</h3><p class="muted">Elegí una expresión, un color y contá quién sos.</p><button class="btn secondary small" onclick="showPage('avatar')">Personalizar avatar</button></div></div>
@@ -190,7 +212,9 @@ window.nexoraApplyCloudData=cloudData=>{
 function fmt(n){return Number(n||0).toLocaleString('es-AR')}
 function toast(msg){let el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display='none',2400)}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===id));if(id==='discover')renderGames('discoverGames');if(id==='catalog')renderCatalog();if(id==='friends')renderFriends();if(id==='wallet')renderTransactions();if(id==='creator')renderMyGames();window.scrollTo(0,0)}
-function gameCard(g){const safeName=escapeHTML(g.name);const playable=g.name==='Torre Imposible';const gameArg="'"+String(g.name).replace(/\\/g,"\\\\").replace(/'/g,"\\\\'").replace(/[\\r\\n]/g," ")+"'";return '<article class="game" role="button" tabindex="0" onclick="openGame('+gameArg+')" onkeydown="if(event.key===\\'Enter\\'||event.key===\\' \\'){event.preventDefault();openGame('+gameArg+')}"><div class="thumb" style="background:'+g.bg+'"><span class="tag">'+(g.genre||'Experiencia')+'</span>'+g.emoji+'</div><div class="game-info"><div class="game-title">'+safeName+'</div><div class="game-meta"><span>◉ '+fmt(g.plays||0)+' visitas</span><span>◆ NEXORA</span></div><button class="btn small game-play-btn" type="button" onclick="event.stopPropagation();openGame('+gameArg+')">'+(playable?'▶ JUGAR AHORA':'Ver experiencia')+'</button></div></article>'}
+function gameCard(g){const name=String(g.name||'');const safeName=escapeHTML(name);const playable=name==='Torre Imposible';const safeAttr=escapeHTML(name);return '<article class="game" role="button" tabindex="0" data-game-name="'+safeAttr+'"><div class="thumb" style="background:'+g.bg+'"><span class="tag">'+(g.genre||'Experiencia')+'</span>'+g.emoji+'</div><div class="game-info"><div class="game-title">'+safeName+'</div><div class="game-meta"><span>◉ '+fmt(g.plays||0)+' visitas</span><span>◆ NEXORA</span></div><button class="btn small game-play-btn" type="button">'+(playable?'▶ JUGAR AHORA':'Ver experiencia')+'</button></div></article>'}
+document.addEventListener('click',function(e){const card=e.target.closest('[data-game-name]');if(card)openGame(card.getAttribute('data-game-name'));});
+document.addEventListener('keydown',function(e){const card=e.target.closest&&e.target.closest('[data-game-name]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openGame(card.getAttribute('data-game-name'));}});
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function allGames(){return [...data.games.map(g=>({...g,bg:'linear-gradient(135deg,#164c46,#426b91)'})),...samples]}
 function renderGames(target,filter=''){let arr=allGames().filter(g=>(g.name+' '+g.desc+' '+g.genre).toLowerCase().includes((filter||'').toLowerCase()));let sort=document.getElementById('gameSort')?.value||'popular';if(sort==='az')arr.sort((a,b)=>a.name.localeCompare(b.name));if(sort==='new')arr.reverse();else if(sort==='popular')arr.sort((a,b)=>(b.plays||0)-(a.plays||0));document.getElementById(target).innerHTML=arr.length?arr.map(gameCard).join(''):'<div class="empty" style="grid-column:1/-1">No encontramos experiencias con esa búsqueda.</div>'}
