@@ -19,6 +19,17 @@ main{margin-left:225px;width:calc(100% - 225px);padding:28px 34px 60px;max-width
 .avatar-stage{height:300px;border-radius:17px;background:radial-gradient(circle at 50% 45%,#354c58,#1c222b 65%);display:grid;place-items:center;position:relative;overflow:hidden}.avatar-figure{font-size:115px;filter:drop-shadow(0 18px 10px #0008)}.color-dot{width:27px;height:27px;border-radius:50%;border:2px solid #ffffff55;cursor:pointer}
 footer{margin-top:55px;padding-top:20px;border-top:1px solid var(--line);color:#737d8b;font-size:12px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#eafaf3;color:#073c29;padding:12px 18px;border-radius:10px;font-weight:800;box-shadow:0 8px 30px #0007;z-index:50;display:none}
+
+.auth-overlay{position:fixed;inset:0;z-index:100;background:rgba(7,10,14,.94);backdrop-filter:blur(16px);display:grid;place-items:center;padding:20px}
+.auth-card{width:min(100%,440px);background:#191c22;border:1px solid #39414d;border-radius:20px;padding:28px;box-shadow:0 25px 90px #0009}
+.auth-logo{font-size:30px;font-weight:950;letter-spacing:-1.5px}.auth-logo span{color:var(--green2)}
+.auth-card h1{font-size:25px;margin:22px 0 7px}.auth-card p{color:var(--muted);line-height:1.5}
+.auth-card label{display:block;color:#d8dde5;font-size:13px;font-weight:700;margin:16px 0 7px}
+.auth-card .field{width:100%}.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.auth-error{display:none;background:#492a2a;border:1px solid #814343;color:#ffc6c6;border-radius:9px;padding:10px 12px;font-size:13px;margin-top:14px}
+.auth-note{font-size:11px!important;margin-top:18px!important}
+.account-line{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:13px 0;border-top:1px solid var(--line)}
+
 @media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}.side{width:190px}main{margin-left:190px;width:calc(100% - 190px);padding:24px}}
 @media(max-width:760px){.top{padding:0 13px;gap:12px}.brand{font-size:21px}.search{max-width:none}.topright .pill{display:none}.side{width:65px;padding:14px 7px}.side-label,.nav span:not(.ico),.side-bottom{display:none}.nav{justify-content:center;padding:12px 0}.ico{font-size:19px}main{margin-left:65px;width:calc(100% - 65px);padding:20px 14px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.thumb{height:115px}.cards{grid-template-columns:1fr}.welcome{align-items:flex-start;flex-direction:column}.hero{padding:22px;min-height:220px}.hero h2{font-size:27px}.hero-art{right:-10px;font-size:90px;opacity:.55}.game-meta{gap:4px}.topright{gap:6px}}
 </style>
@@ -65,9 +76,31 @@ footer{margin-top:55px;padding-top:20px;border-top:1px solid var(--line);color:#
 <section class="page" id="page-groups"><div class="welcome"><div><div class="eyebrow">COMUNIDADES</div><h1>Grupos</h1><p class="sub">Espacios para reunir jugadores con intereses parecidos.</p></div></div><div class="cards"><div class="panel"><div style="font-size:32px">🎮</div><h3>Fans de experiencias</h3><p class="muted">Compartí descubrimientos y recomendaciones.</p><button class="btn secondary small" onclick="toast('Los grupos online llegarán en una próxima etapa.')">Ver grupo</button></div><div class="panel"><div style="font-size:32px">🛠️</div><h3>Creadores NEXORA</h3><p class="muted">Ideas, prototipos y novedades de desarrollo.</p><button class="btn secondary small" onclick="showPage('creator')">Ir a Creator Hub</button></div><div class="panel"><div style="font-size:32px">🏆</div><h3>Competitivo</h3><p class="muted">Encontrá desafíos y jugadores competitivos.</p><button class="btn secondary small" onclick="toast('Este grupo estará disponible más adelante.')">Ver grupo</button></div></div></section>
 <section class="page" id="page-wallet"><div class="welcome"><div><div class="eyebrow">TU ECONOMÍA</div><h1>Billetera</h1><p class="sub">Administrá tus NX Coins de demostración.</p></div></div><div class="panel" style="background:linear-gradient(120deg,#173d34,#202b35)"><div class="muted">SALDO DISPONIBLE</div><div class="stat" style="font-size:40px">◆ <span id="walletCoins">1.000</span> NX</div><p class="muted">Moneda virtual de prueba, sin valor monetario real.</p></div><div class="section-head"><h2>Movimientos</h2></div><div class="panel" id="transactions"></div></section>
 <section class="page" id="page-creator"><div class="welcome"><div><div class="eyebrow">CREATOR HUB</div><h1>Creá tu experiencia</h1><p class="sub">Publicá una ficha para compartir tu idea con la comunidad.</p></div></div><div class="cards"><div class="panel" style="grid-column:span 2"><h3>Nueva experiencia</h3><div class="formrow"><input class="field full" id="newGameName" maxlength="40" placeholder="Nombre de la experiencia"></div><div class="formrow"><input class="field full" id="newGameDesc" maxlength="130" placeholder="Descripción breve"></div><div class="formrow"><select class="field" id="newGameEmoji"><option>🌋</option><option>🏎️</option><option>🏝️</option><option>🧩</option><option>🐉</option><option>🚀</option><option>🏰</option></select><select class="field" id="newGameGenre"><option>Aventura</option><option>Obby</option><option>Simulador</option><option>Social</option><option>Competitivo</option></select></div><button class="btn" onclick="publishGame()">Publicar ficha</button><p class="muted" style="font-size:12px;margin-top:14px">Importante: publicar una ficha no crea todavía un juego ejecutable ni lo sube a servidores. El editor y el motor de experiencias se desarrollarán por separado.</p></div><div class="panel"><div style="font-size:34px">🧱</div><h3>Próximo paso: NEXORA Studio</h3><p class="muted">Editor de escenas, objetos, terreno, scripts y pruebas de juego.</p><button class="btn secondary small" onclick="toast('NEXORA Studio está en planificación.')">Ver hoja de ruta</button></div></div><div class="section-head"><h2>Tus publicaciones</h2></div><div id="myGames" class="grid"></div></section>
-<section class="page" id="page-settings"><div class="welcome"><div><div class="eyebrow">TU CUENTA</div><h1>Configuración</h1><p class="sub">Ajustá tu perfil en este dispositivo.</p></div></div><div class="panel"><h3>Nombre de usuario</h3><div class="formrow"><input class="field" id="nameInput" maxlength="20" placeholder="Tu nombre"><button class="btn" onclick="saveName()">Guardar nombre</button></div><h3 style="margin-top:25px">Datos locales</h3><p class="muted">Esta primera versión guarda tus cambios en el almacenamiento de este navegador. No hay todavía cuentas online ni sincronización entre dispositivos.</p><button class="btn secondary" onclick="resetLocal()">Restablecer datos de demostración</button></div></section>
+<section class="page" id="page-settings"><div class="welcome"><div><div class="eyebrow">TU CUENTA</div><h1>Configuración</h1><p class="sub">Ajustá tu perfil en este dispositivo.</p></div></div><div class="panel"><h3>Nombre de usuario</h3><div class="formrow"><input class="field" id="nameInput" maxlength="20" placeholder="Tu nombre"><button class="btn" onclick="saveName()">Guardar nombre</button></div><h3 style="margin-top:25px">Cuenta NEXORA</h3>
+<div class="account-line"><div><b id="accountEmail">No hay una cuenta conectada</b><div class="muted" style="font-size:12px" id="accountStatus">Conectate para sincronizar tus datos.</div></div><button class="btn secondary small" onclick="nexoraLogout()">Cerrar sesión</button></div>
+<h3 style="margin-top:25px">Datos de demostración</h3><p class="muted">Tu perfil, avatar, NX Coins, amistades y publicaciones se guardan en tu cuenta cuando iniciás sesión. Las funciones sociales y los juegos online todavía están en desarrollo.</p><button class="btn secondary" onclick="resetLocal()">Restablecer datos de demostración</button></div></section>
 <footer>NEXORA © 2026 · Proyecto independiente en desarrollo. No afiliado a Roblox Corporation.</footer>
-</main></div><div class="toast" id="toast"></div>
+</main></div>
+<div class="auth-overlay" id="authOverlay">
+ <div class="auth-card">
+  <div class="auth-logo">NEX<span>ORA</span></div>
+  <div class="eyebrow" style="margin-top:18px">TU CUENTA NEXORA</div>
+  <h1 id="authTitle">Entrá a tu universo</h1>
+  <p id="authSubtitle">Iniciá sesión para guardar tu perfil, avatar y progreso en tu cuenta.</p>
+  <label for="authEmail">Correo electrónico</label>
+  <input class="field" id="authEmail" type="email" autocomplete="email" maxlength="254" placeholder="tu correo electrónico">
+  <label for="authPassword">Contraseña</label>
+  <input class="field" id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Mínimo 6 caracteres">
+  <div class="auth-actions">
+   <button class="btn" id="loginButton" onclick="nexoraLogin()">Iniciar sesión</button>
+   <button class="btn secondary" id="registerButton" onclick="nexoraRegister()">Crear cuenta</button>
+  </div>
+  <button class="btn secondary small" style="width:100%;margin-top:10px" onclick="nexoraResetPassword()">Recuperar contraseña</button>
+  <div class="auth-error" id="authError" role="alert"></div>
+  <p class="auth-note">Tu contraseña se gestiona mediante Firebase Authentication. Nunca la compartas con nadie. NEXORA es un proyecto independiente en desarrollo.</p>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
 <script>
 const KEY='nexora_beta_v1';
 const defaultData={name:'Jugador',coins:1000,face:'😀',color:'#00b879',bio:'¡Hola! Estoy explorando NEXORA.',friends:[],games:[],transactions:[{label:'Saldo inicial de demostración',amount:1000,date:new Date().toLocaleDateString('es-AR')}]};
@@ -122,10 +155,13 @@ function resetLocal(){if(!confirm('¿Restablecer los datos locales de NEXORA en 
 document.getElementById('homeGames').innerHTML=samples.slice(0,4).map(gameCard).join('');renderGames('discoverGames');updateUI();
 </script>
 
-<!-- NEXORA: Firestore sincroniza el perfil y los datos del jugador -->
+<!-- NEXORA: cuentas reales con Firebase Authentication y guardado privado en Firestore -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import {
+    getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+    createUserWithEmailAndPassword, sendPasswordResetEmail, signOut
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
   import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -138,48 +174,155 @@ document.getElementById('homeGames').innerHTML=samples.slice(0,4).map(gameCard).
     measurementId: "G-G8C7JB0WRC"
   };
 
-  try {
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const credential = await signInAnonymously(auth);
-    const userRef = doc(db, "users", credential.user.uid);
-    const snapshot = await getDoc(userRef);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  let activeUser = null;
+  let saveQueue = Promise.resolve();
 
-    if (snapshot.exists()) {
-      const cloudData = snapshot.data();
-      if (window.nexoraApplyCloudData) window.nexoraApplyCloudData(cloudData);
-    } else if (window.nexoraGetLocalData) {
-      await setDoc(userRef, { ...window.nexoraGetLocalData(), uid: credential.user.uid, updatedAt: serverTimestamp() });
-    }
-
-    let saveQueue = Promise.resolve();
-    window.NEXORA_CLOUD = {
-      uid: credential.user.uid,
-      save(playerData) {
-        const safeData = {
-          name: String(playerData.name || "Jugador").slice(0, 24),
-          coins: Math.max(0, Number(playerData.coins) || 0),
-          face: String(playerData.face || "😀").slice(0, 8),
-          color: /^#[0-9a-f]{6}$/i.test(playerData.color) ? playerData.color : "#00b879",
-          bio: String(playerData.bio || "").slice(0, 180),
-          friends: Array.isArray(playerData.friends) ? playerData.friends.slice(0, 200) : [],
-          games: Array.isArray(playerData.games) ? playerData.games.slice(0, 50) : [],
-          transactions: Array.isArray(playerData.transactions) ? playerData.transactions.slice(0, 200) : [],
-          uid: credential.user.uid,
-          updatedAt: serverTimestamp()
-        };
-        saveQueue = saveQueue.then(() => setDoc(userRef, safeData, { merge: true }))
-          .catch(error => console.error("NEXORA: error guardando en Firestore", error));
-        return saveQueue;
-      }
+  function authMessage(error) {
+    const messages = {
+      "auth/invalid-email": "El correo no tiene un formato válido.",
+      "auth/user-not-found": "No encontramos una cuenta con ese correo.",
+      "auth/wrong-password": "La contraseña no es correcta.",
+      "auth/invalid-credential": "El correo o la contraseña son incorrectos.",
+      "auth/email-already-in-use": "Ese correo ya tiene una cuenta. Probá iniciar sesión.",
+      "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+      "auth/too-many-requests": "Hubo demasiados intentos. Esperá un rato y volvé a probar.",
+      "auth/network-request-failed": "No se pudo conectar. Revisá tu conexión a internet.",
+      "auth/operation-not-allowed": "El acceso por correo y contraseña no está habilitado en Firebase Authentication."
     };
-    window.dispatchEvent(new CustomEvent("nexora-cloud-ready"));
-    console.info("NEXORA: Firestore sincronizado. UID:", credential.user.uid);
-  } catch (error) {
-    console.error("NEXORA: no se pudo conectar con Firestore.", error);
-    window.dispatchEvent(new CustomEvent("nexora-cloud-error", { detail: error }));
+    return messages[error?.code] || "No se pudo completar la operación. Revisá los datos e intentá de nuevo.";
   }
+
+  function showAuthError(message) {
+    const box = document.getElementById("authError");
+    box.textContent = message;
+    box.style.display = "block";
+  }
+  function clearAuthError() {
+    const box = document.getElementById("authError");
+    box.textContent = "";
+    box.style.display = "none";
+  }
+  function credentials() {
+    const email = document.getElementById("authEmail").value.trim();
+    const password = document.getElementById("authPassword").value;
+    if (!email || !password) throw new Error("Completá el correo y la contraseña.");
+    if (password.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres.");
+    return { email, password };
+  }
+
+  window.nexoraLogin = async () => {
+    clearAuthError();
+    try {
+      const { email, password } = credentials();
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      showAuthError(error.code ? authMessage(error) : error.message);
+    }
+  };
+
+  window.nexoraRegister = async () => {
+    clearAuthError();
+    try {
+      const { email, password } = credentials();
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      showAuthError(error.code ? authMessage(error) : error.message);
+    }
+  };
+
+  window.nexoraResetPassword = async () => {
+    clearAuthError();
+    const email = document.getElementById("authEmail").value.trim();
+    if (!email) {
+      showAuthError("Escribí tu correo primero y después tocá recuperar contraseña.");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      showAuthError("Si el correo está registrado, Firebase enviará un enlace para restablecer la contraseña.");
+    } catch (error) {
+      showAuthError(authMessage(error));
+    }
+  };
+
+  window.nexoraLogout = async () => {
+    if (!confirm("¿Querés cerrar sesión en NEXORA?")) return;
+    try { await signOut(auth); }
+    catch (error) { toast(authMessage(error)); }
+  };
+
+  function safePlayerData(playerData) {
+    return {
+      name: String(playerData.name || "Jugador").slice(0, 24),
+      coins: Math.max(0, Number(playerData.coins) || 0),
+      face: String(playerData.face || "😀").slice(0, 8),
+      color: /^#[0-9a-f]{6}$/i.test(playerData.color) ? playerData.color : "#00b879",
+      bio: String(playerData.bio || "").slice(0, 180),
+      friends: Array.isArray(playerData.friends) ? playerData.friends.slice(0, 200) : [],
+      games: Array.isArray(playerData.games) ? playerData.games.slice(0, 50) : [],
+      transactions: Array.isArray(playerData.transactions) ? playerData.transactions.slice(0, 200) : []
+    };
+  }
+
+  function setAccountUI(user) {
+    document.getElementById("accountEmail").textContent = user?.email || "Sin sesión";
+    document.getElementById("accountStatus").textContent = user ? "Cuenta conectada · Datos sincronizados en la nube" : "Iniciá sesión para sincronizar tus datos.";
+  }
+
+  onAuthStateChanged(auth, async user => {
+    activeUser = user;
+    if (!user) {
+      document.getElementById("authOverlay").style.display = "grid";
+      setAccountUI(null);
+      return;
+    }
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const snapshot = await getDoc(userRef);
+      if (snapshot.exists()) {
+        window.nexoraApplyCloudData(snapshot.data());
+      } else {
+        const initialData = safePlayerData(window.nexoraGetLocalData());
+        await setDoc(userRef, {
+          ...initialData,
+          uid: user.uid,
+          email: user.email || null,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+      }
+
+      window.NEXORA_CLOUD = {
+        uid: user.uid,
+        save(playerData) {
+          const safeData = safePlayerData(playerData);
+          saveQueue = saveQueue.then(() => setDoc(userRef, {
+            ...safeData,
+            uid: user.uid,
+            email: user.email || null,
+            updatedAt: serverTimestamp()
+          }, { merge: true })).catch(error => {
+            console.error("NEXORA: error guardando en Firestore", error);
+            toast("No se pudo sincronizar. Revisá tu conexión.");
+          });
+          return saveQueue;
+        }
+      };
+      setAccountUI(user);
+      document.getElementById("authOverlay").style.display = "none";
+      document.getElementById("authPassword").value = "";
+      clearAuthError();
+      window.dispatchEvent(new CustomEvent("nexora-cloud-ready"));
+      console.info("NEXORA: cuenta autenticada y perfil sincronizado.");
+    } catch (error) {
+      console.error("NEXORA: error cargando el perfil", error);
+      showAuthError("No pudimos cargar tu perfil. Revisá que las reglas de Firestore estén publicadas.");
+      document.getElementById("authOverlay").style.display = "grid";
+    }
+  });
 </script>
 </body>
 </html>
