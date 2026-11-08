@@ -67,6 +67,19 @@ main{padding-top:34px}
 .profile-edit-grid .field{width:100%}
 @media(max-width:760px){.hero-art{font-size:90px;right:-10px}.home-metrics{grid-template-columns:1fr 1fr}.home-feature-grid{grid-template-columns:1fr}.profile-edit-grid{grid-template-columns:1fr}.thumb{height:120px}}
 
+
+/* NEXORA 0.3 — experiencia jugable */
+.play-overlay{position:fixed;inset:0;z-index:90;background:#070b10f2;display:none;place-items:center;padding:18px}
+.play-card{width:min(100%,1000px);background:#171e27;border:1px solid #344354;border-radius:18px;overflow:hidden;box-shadow:0 24px 90px #000b}
+.play-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid #2c3948}
+.play-head h2{font-size:18px;margin:0}.play-stage{padding:14px;background:#101720}
+#nexoraGameCanvas{display:block;width:100%;height:auto;aspect-ratio:900/420;background:#101d2c;border-radius:12px;outline:1px solid #334557}
+.play-help{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;color:#aeb9c6;font-size:13px}
+.play-controls{display:flex;gap:8px;align-items:center}
+.play-controls button{background:#293544;border:1px solid #425266;border-radius:9px;padding:9px 14px;font-weight:800}
+.play-controls button:active{background:#00b879;color:#06251a}
+@media(max-width:600px){.play-overlay{padding:6px}.play-head{padding:11px}.play-stage{padding:7px}.play-help{padding:9px;font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -137,6 +150,14 @@ main{padding-top:34px}
   <p class="auth-note">Tu contraseña se gestiona mediante Firebase Authentication. Nunca la compartas con nadie. NEXORA es un proyecto independiente en desarrollo.</p>
  </div>
 </div>
+<div class="play-overlay" id="playOverlay">
+ <div class="play-card">
+  <div class="play-head"><div><div class="eyebrow">NEXORA 0.3 · EXPERIENCIA JUGABLE</div><h2 id="playTitle">Torre Imposible</h2></div><button class="btn secondary small" onclick="closeGame()">✕ Salir</button></div>
+  <div class="play-stage"><canvas id="nexoraGameCanvas" width="900" height="420" aria-label="Juego de plataformas NEXORA"></canvas></div>
+  <div class="play-help"><span>⌨️ Mover: A / D o ← / → · Saltar: ESPACIO / W / ↑</span><div class="play-controls"><button onpointerdown="gameHold('left',true)" onpointerup="gameHold('left',false)" onpointerleave="gameHold('left',false)">◀</button><button onclick="gameJump()">SALTAR</button><button onpointerdown="gameHold('right',true)" onpointerup="gameHold('right',false)" onpointerleave="gameHold('right',false)">▶</button><button onclick="restartGame()">↻ Reiniciar</button></div></div>
+ </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
 const KEY='nexora_beta_v1';
@@ -172,7 +193,33 @@ function gameCard(g){return '<article class="game" onclick="openGame('+JSON.stri
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function allGames(){return [...data.games.map(g=>({...g,bg:'linear-gradient(135deg,#164c46,#426b91)'})),...samples]}
 function renderGames(target,filter=''){let arr=allGames().filter(g=>(g.name+' '+g.desc+' '+g.genre).toLowerCase().includes((filter||'').toLowerCase()));let sort=document.getElementById('gameSort')?.value||'popular';if(sort==='az')arr.sort((a,b)=>a.name.localeCompare(b.name));if(sort==='new')arr.reverse();else if(sort==='popular')arr.sort((a,b)=>(b.plays||0)-(a.plays||0));document.getElementById(target).innerHTML=arr.length?arr.map(gameCard).join(''):'<div class="empty" style="grid-column:1/-1">No encontramos experiencias con esa búsqueda.</div>'}
-function openGame(name){let g=allGames().find(x=>x.name===name);if(!g)return;toast('«'+g.name+'»: esta ficha es una vista previa. El juego todavía no tiene un motor ejecutable.')}
+let ng={running:false,raf:0,keys:{},player:{x:35,y:320,vx:0,vy:0,w:28,h:36,on:false},camera:0,won:false};
+const ngPlatforms=[{x:0,y:370,w:230,h:50},{x:290,y:325,w:130,h:18},{x:485,y:280,w:125,h:18},{x:680,y:325,w:125,h:18},{x:875,y:270,w:150,h:18},{x:1080,y:370,w:180,h:50}];
+const ngSpikes=[{x:160,y:350,w:38,h:20},{x:365,y:305,w:30,h:20},{x:545,y:260,w:28,h:20},{x:735,y:305,w:32,h:20},{x:930,y:250,w:30,h:20}];
+function openGame(name){if(name!=='Torre Imposible'){toast('Esta experiencia todavía no es jugable. ¡Torre Imposible ya tiene una demo!');return}document.getElementById('playTitle').textContent=name;document.getElementById('playOverlay').style.display='grid';restartGame()}
+function closeGame(){ng.running=false;cancelAnimationFrame(ng.raf);document.getElementById('playOverlay').style.display='none';ng.keys={}}
+function restartGame(){ng.player={x:35,y:320,vx:0,vy:0,w:28,h:36,on:false};ng.camera=0;ng.won=false;ng.running=true;cancelAnimationFrame(ng.raf);gameLoop()}
+function gameHold(key,on){ng.keys[key]=on}
+function gameJump(){if(ng.player.on&&!ng.won){ng.player.vy=-11.8;ng.player.on=false}}
+function gameLoop(){if(!ng.running)return;const canvas=document.getElementById('nexoraGameCanvas'),ctx=canvas.getContext('2d'),p=ng.player;
+ const left=ng.keys.left,right=ng.keys.right;p.vx=(right?4.1:0)-(left?4.1:0);p.x=Math.max(0,p.x+p.vx);p.vy=Math.min(13,p.vy+.55);const oldY=p.y;p.y+=p.vy;p.on=false;
+ for(const q of ngPlatforms){if(p.x+p.w>q.x&&p.x<q.x+q.w&&oldY+p.h<=q.y+5&&p.y+p.h>=q.y&&p.vy>=0){p.y=q.y-p.h;p.vy=0;p.on=true}}
+ for(const s of ngSpikes){if(p.x+p.w>s.x+5&&p.x<s.x+s.w-5&&p.y+p.h>s.y+5&&p.y<s.y+s.h){p.x=35;p.y=320;p.vx=0;p.vy=0;ng.camera=0}}
+ if(p.y>470){p.x=35;p.y=320;p.vy=0;ng.camera=0}
+ if(p.x>1100&&!ng.won){ng.won=true;toast('¡Nivel completado! Llegaste al final de Torre Imposible.')}
+ ng.camera=Math.max(0,Math.min(360,p.x-300));
+ ctx.clearRect(0,0,900,420);const grad=ctx.createLinearGradient(0,0,0,420);grad.addColorStop(0,'#18364b');grad.addColorStop(1,'#101923');ctx.fillStyle=grad;ctx.fillRect(0,0,900,420);
+ ctx.fillStyle='#ffffff12';for(let i=0;i<18;i++){ctx.beginPath();ctx.arc((i*83-ng.camera*.22)%980,45+(i*37)%180,2,0,Math.PI*2);ctx.fill()}
+ ctx.save();ctx.translate(-ng.camera,0);
+ for(const q of ngPlatforms){ctx.fillStyle='#00b879';ctx.fillRect(q.x,q.y,q.w,q.h);ctx.fillStyle='#65f0bd';ctx.fillRect(q.x,q.y,q.w,5)}
+ for(const s of ngSpikes){ctx.fillStyle='#ff6b6b';ctx.beginPath();ctx.moveTo(s.x,s.y+s.h);ctx.lineTo(s.x+s.w/2,s.y);ctx.lineTo(s.x+s.w,s.y+s.h);ctx.fill()}
+ ctx.fillStyle='#ffd166';ctx.fillRect(1150,315,12,55);ctx.fillStyle='#fff';ctx.font='bold 13px system-ui';ctx.fillText('META',1124,305);
+ ctx.fillStyle='#4c8dff';ctx.fillRect(p.x,p.y,p.w,p.h);ctx.fillStyle='#fff';ctx.fillRect(p.x+6,p.y+8,5,5);ctx.fillRect(p.x+18,p.y+8,5,5);ctx.restore();
+ ctx.fillStyle='#fff';ctx.font='bold 15px system-ui';ctx.fillText(ng.won?'¡NIVEL COMPLETADO!':'LLEGÁ A LA BANDERA →',22,30);
+ if(!ng.won)ng.raf=requestAnimationFrame(gameLoop);
+}
+window.addEventListener('keydown',e=>{if(document.getElementById('playOverlay').style.display!=='grid')return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup',' '].includes(k))e.preventDefault();if(k==='arrowleft'||k==='a')ng.keys.left=true;if(k==='arrowright'||k==='d')ng.keys.right=true;if(k===' '||k==='arrowup'||k==='w')gameJump()});
+window.addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(k==='arrowleft'||k==='a')ng.keys.left=false;if(k==='arrowright'||k==='d')ng.keys.right=false});
 function renderCatalog(){document.getElementById('catalogGrid').innerHTML=catalog.map((x,i)=>'<article class="game"><div class="thumb" style="background:linear-gradient(135deg,#273c43,#4a3d67)">'+x.emoji+'</div><div class="game-info"><div class="game-title">'+x.name+'</div><div class="game-meta"><span>'+x.kind+'</span><b>◆ '+x.price+' NX</b></div><button class="btn small" style="width:100%;margin-top:12px" onclick="buyItem('+i+')">Adquirir</button></div></article>').join('')}
 function buyItem(i){let x=catalog[i];if(data.coins<x.price){toast('No tenés NX Coins suficientes.');return}data.coins-=x.price;data.transactions.unshift({label:'Compra: '+x.name,amount:-x.price,date:new Date().toLocaleDateString('es-AR')});persist();toast('¡Adquiriste '+x.name+'!')}
 function setFace(v){data.face=v;document.getElementById('avatarFigure').textContent=v;document.getElementById('profileAvatar').textContent=v;document.getElementById('topAvatar').textContent=v}
