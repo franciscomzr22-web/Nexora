@@ -84,7 +84,17 @@ const samples=[
  {name:'Sky Builders',desc:'Construí tu refugio entre las nubes.',emoji:'☁️',genre:'Creativo',plays:3210,bg:'linear-gradient(135deg,#287b9e,#8ed2dc)'}
 ];
 const catalog=[{name:'Aurora',emoji:'🌌',price:120,kind:'Efecto'},{name:'Gorra Pixel',emoji:'🧢',price:80,kind:'Accesorio'},{name:'Aura Verde',emoji:'💚',price:150,kind:'Efecto'},{name:'Mascota Mini',emoji:'🐣',price:200,kind:'Mascota'},{name:'Alas Cósmicas',emoji:'🪽',price:300,kind:'Accesorio'},{name:'Visor Neon',emoji:'🥽',price:100,kind:'Accesorio'},{name:'Portal Azul',emoji:'🌀',price:180,kind:'Efecto'},{name:'Corona Solar',emoji:'👑',price:250,kind:'Accesorio'}];
-function persist(){localStorage.setItem(KEY,JSON.stringify(data));updateUI()}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));updateUI();if(window.NEXORA_CLOUD?.save)window.NEXORA_CLOUD.save(data)}
+window.nexoraGetLocalData=()=>data;
+window.nexoraApplyCloudData=cloudData=>{
+  data={...defaultData,...cloudData};
+  localStorage.setItem(KEY,JSON.stringify(data));
+  updateUI();
+  renderFriends();
+  renderTransactions();
+  renderMyGames();
+};
+
 function fmt(n){return Number(n||0).toLocaleString('es-AR')}
 function toast(msg){let el=document.getElementById('toast');el.textContent=msg;el.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display='none',2400)}
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===id));if(id==='discover')renderGames('discoverGames');if(id==='catalog')renderCatalog();if(id==='friends')renderFriends();if(id==='wallet')renderTransactions();if(id==='creator')renderMyGames();window.scrollTo(0,0)}
@@ -112,11 +122,11 @@ function resetLocal(){if(!confirm('¿Restablecer los datos locales de NEXORA en 
 document.getElementById('homeGames').innerHTML=samples.slice(0,4).map(gameCard).join('');renderGames('discoverGames');updateUI();
 </script>
 
-<!-- Firebase: conexión inicial de NEXORA -->
+<!-- NEXORA: Firestore sincroniza el perfil y los datos del jugador -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCvFq5AypXgf0jdG8HiyZ4TdR1ii0FDUtA",
@@ -132,12 +142,43 @@ document.getElementById('homeGames').innerHTML=samples.slice(0,4).map(gameCard).
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    window.NEXORA_FIREBASE = { app, auth, db };
-    window.dispatchEvent(new CustomEvent("nexora-firebase-ready"));
-    console.info("NEXORA: Firebase conectado correctamente.");
+    const credential = await signInAnonymously(auth);
+    const userRef = doc(db, "users", credential.user.uid);
+    const snapshot = await getDoc(userRef);
+
+    if (snapshot.exists()) {
+      const cloudData = snapshot.data();
+      if (window.nexoraApplyCloudData) window.nexoraApplyCloudData(cloudData);
+    } else if (window.nexoraGetLocalData) {
+      await setDoc(userRef, { ...window.nexoraGetLocalData(), uid: credential.user.uid, updatedAt: serverTimestamp() });
+    }
+
+    let saveQueue = Promise.resolve();
+    window.NEXORA_CLOUD = {
+      uid: credential.user.uid,
+      save(playerData) {
+        const safeData = {
+          name: String(playerData.name || "Jugador").slice(0, 24),
+          coins: Math.max(0, Number(playerData.coins) || 0),
+          face: String(playerData.face || "😀").slice(0, 8),
+          color: /^#[0-9a-f]{6}$/i.test(playerData.color) ? playerData.color : "#00b879",
+          bio: String(playerData.bio || "").slice(0, 180),
+          friends: Array.isArray(playerData.friends) ? playerData.friends.slice(0, 200) : [],
+          games: Array.isArray(playerData.games) ? playerData.games.slice(0, 50) : [],
+          transactions: Array.isArray(playerData.transactions) ? playerData.transactions.slice(0, 200) : [],
+          uid: credential.user.uid,
+          updatedAt: serverTimestamp()
+        };
+        saveQueue = saveQueue.then(() => setDoc(userRef, safeData, { merge: true }))
+          .catch(error => console.error("NEXORA: error guardando en Firestore", error));
+        return saveQueue;
+      }
+    };
+    window.dispatchEvent(new CustomEvent("nexora-cloud-ready"));
+    console.info("NEXORA: Firestore sincronizado. UID:", credential.user.uid);
   } catch (error) {
-    console.error("NEXORA: no se pudo inicializar Firebase.", error);
-    window.dispatchEvent(new CustomEvent("nexora-firebase-error", { detail: error }));
+    console.error("NEXORA: no se pudo conectar con Firestore.", error);
+    window.dispatchEvent(new CustomEvent("nexora-cloud-error", { detail: error }));
   }
 </script>
 </body>
